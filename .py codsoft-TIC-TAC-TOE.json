@@ -1,0 +1,80 @@
+import math
+
+def show_board(b):
+    for r in b:
+        print(" | ".join(r))
+        print("-" * 5)
+
+def moves_left(b):
+    return any("_" in r for r in b)
+
+def score(b):
+    # Check rows, cols, diagonals
+    lines = b + [list(c) for c in zip(*b)] + [[b[i][i] for i in range(3)], [b[i][2 - i] for i in range(3)]]
+    for l in lines:
+        if l.count(l[0]) == 3 and l[0] != "_":
+            return 10 if l[0] == "X" else -10
+    return 0
+
+def minimax(b, depth, ai_turn):
+    s = score(b)
+    if s or not moves_left(b):
+        return s - depth if s > 0 else s + depth
+    best = -math.inf if ai_turn else math.inf
+    for i in range(3):
+        for j in range(3):
+            if b[i][j] == "_":
+                b[i][j] = "X" if ai_turn else "O"
+                val = minimax(b, depth + 1, not ai_turn)
+                b[i][j] = "_"
+                best = max(best, val) if ai_turn else min(best, val)
+    return best
+
+def best_ai_move(b):
+    best, move = -math.inf, (0, 0)
+    for i in range(3):
+        for j in range(3):
+            if b[i][j] == "_":
+                b[i][j] = "X"
+                val = minimax(b, 0, False)
+                b[i][j] = "_"
+                if val > best:
+                    best, move = val, (i, j)
+    return move
+
+def play():
+    b = [["_"] * 3 for _ in range(3)]
+    print("You = O, AI = X")
+    show_board(b)
+
+    while True:
+        try:
+            r, c = map(int, input("Enter row and column (0-2): ").split())
+        except ValueError:
+            print("Invalid input! Enter numbers separated by space.")
+            continue
+
+        if r not in range(3) or c not in range(3) or b[r][c] != "_":
+            print("Invalid move! Try again.")
+            continue
+
+        b[r][c] = "O"
+        show_board(b)
+        if score(b) == -10:
+            print("You win!")
+            break
+        if not moves_left(b):
+            print("It's a draw!")
+            break
+
+        r, c = best_ai_move(b)
+        b[r][c] = "X"
+        show_board(b)
+        if score(b) == 10:
+            print("AI wins!")
+            break
+        if not moves_left(b):
+            print("It's a draw!")
+            break
+
+play()
