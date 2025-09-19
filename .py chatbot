@@ -1,0 +1,35 @@
+# Simple Chatbot using if-else logic
+# Works in the terminal/command line
+
+def chatbot_reply(user_text):
+    user_text = user_text.lower()  # convert to lowercase for easy matching
+
+    # Basic rule-based responses
+    if "hello" in user_text or "hi" in user_text:
+        return "Hello! How can I help you today?"
+
+    elif "how are you" in user_text:
+        return "I'm doing well, thank you for asking! How about you?"
+
+    elif "your name" in user_text:
+        return "I am ChatBuddy, your simple chatbot friend!"
+
+    elif "bye" in user_text or "goodbye" in user_text:
+        return "Goodbye! Have a great day ahead."
+
+    elif "weather" in user_text:
+        return "I can't check the weather right now, but I hope it's nice where you are!"
+
+    else:
+        return "Sorry, I don't understand that yet. Can you ask something else?"
+
+# Main program to chat with the bot
+print("ChatBuddy: Hi! I'm ChatBuddy. Type 'bye' to exit.")
+
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == "bye":
+        print("ChatBuddy: Goodbye! Take care.")
+        break
+    response = chatbot_reply(user_input)
+    print("ChatBuddy:", response)
